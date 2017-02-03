@@ -15,30 +15,30 @@ services:
   - docker
   
 env:
-  # - RECIPE=glibc
-  # - RECIPE=gmp
-  # - RECIPE=mpfr
-  # - RECIPE=mpc
-  # - RECIPE=isl
-  # - RECIPE=binutils
-  # - RECIPE=gcc 
-  # - RECIPE=libgcc
-  - RECIPE=vcs
-  - RECIPE=python-scons
-  - RECIPE=python-parse
-  - RECIPE=libdev
-  - RECIPE=librun
-  - RECIPE=python-dev
-  - RECIPE=python-dbg
-  - RECIPE=python-doc
-  - RECIPE=python-pkg
-  - RECIPE=llvm
-  - RECIPE=clang
-  - RECIPE=python-clang
-  - RECIPE=libboost
-  - UBUNTU=14.04
-  - UBUNTU=16.04
-  - ENVIRONMENT=conda/statiskit-dev.yml
+  - RECIPE=glibc
+  - RECIPE=gmp
+  - RECIPE=mpfr
+  - RECIPE=mpc
+  - RECIPE=isl
+  - RECIPE=binutils
+  - RECIPE=gcc 
+  - RECIPE=libgcc
+  # - RECIPE=vcs
+  # - RECIPE=python-scons
+  # - RECIPE=python-parse
+  # - RECIPE=libdev
+  # - RECIPE=librun
+  # - RECIPE=python-dev
+  # - RECIPE=python-dbg
+  # - RECIPE=python-doc
+  # - RECIPE=python-pkg
+  # - RECIPE=llvm
+  # - RECIPE=clang
+  # - RECIPE=python-clang
+  # - RECIPE=libboost
+  # - UBUNTU=14.04
+  # - UBUNTU=16.04
+  # - ENVIRONMENT=conda/statiskit-dev.yml
 
 matrix:
   exclude:
