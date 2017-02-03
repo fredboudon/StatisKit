@@ -73,7 +73,7 @@ if [[ "$ERROR" = "0" ]]; then
             if [[ ! "$?" = "0" ]]; then
                 export ERROR=1
             else
-                conda activate $STATISKIT_DEV
+                source activate $STATISKIT_DEV
             fi
         fi
     fi

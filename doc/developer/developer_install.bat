@@ -46,6 +46,7 @@ if "%CONFIGURE_ONLY%"=="false" (
             echo "Developer configuration failed."
             exit 1
         ) else (
+            activate statiskit-dev
             echo "Developer configuration and installation succeded."
         )
     ) else (
@@ -55,6 +56,7 @@ if "%CONFIGURE_ONLY%"=="false" (
             echo "Developer configuration failed."
             exit 1
         ) else (
+            activate %STATISKIT_DEV%
             echo "Developer configuration and installation succeded."
         )
     )
