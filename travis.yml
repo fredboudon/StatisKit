@@ -15,12 +15,12 @@ services:
   - docker
   
 env:
+  # - RECIPE=glibc
   # - RECIPE=gmp
   # - RECIPE=mpfr
   # - RECIPE=mpc
   # - RECIPE=isl
   # - RECIPE=binutils
-  # - RECIPE=glibc
   # - RECIPE=gcc 
   # - RECIPE=libgcc
   - RECIPE=vcs
@@ -38,7 +38,6 @@ env:
   - RECIPE=libboost
   - UBUNTU=14.04
   - UBUNTU=16.04
-  - ENVIRONMENT=conda/statiskit-dev.yml
 
 matrix:
   exclude:

@@ -12,9 +12,14 @@ build:
 requirements:
   build:
     - python
+    - networkx
+    - pyyaml
+    - path.py
   run:
     - python
-
+    - networkx
+    - pyyaml
+    - path.py
 test:
   files:
     - SConstruct

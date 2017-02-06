@@ -11,17 +11,17 @@ def generate(env):
         env.AppendUnique(LIBS = ['boost_python'])
         env.AppendUnique(CPPDEFINES = ['BOOST_PYTHON_DYNAMIC_LIB',
                                        'BOOST_ALL_NO_LIB'])
-        def BuildBoostPython(env, target, sources):
-            # Code to build "target" from "source"
 
+        def BoostPythonExtension(env, target, sources):
+            # Code to build "target" from "source"
             SP_DIR = env['SP_DIR']
             SYSTEM = env['SYSTEM']
             if not SYSTEM == 'win':
                 target += '.so'
-                target = os.path.join(SP_DIR, target)
+                target = env.File(os.path.join(SP_DIR, target))
             else:
                 target += '.pyd'
-            target = env.File(target)
+                target = env.File(target)
             targets = list(itertools.chain(*[env.SharedObject(None, source) for source in sources  if source.suffix in ['.cpp', '.cxx', '.c++']]))
             sources = [source for source in sources if source.suffix == '.h']
             if len(sources) == 1 and not SYSTEM == 'win':
@@ -48,16 +48,14 @@ def generate(env):
                 pyd, lib, exp = env.SharedLibrary(target, [], SHLIBPREFIX='',
                                                   SHLIBSUFFIX = '.pyd')
                 return env.Install(os.path.join(SP_DIR, path(target).parent), pyd)
+            elif SYSTEM == 'osx':
+                return env.LoadableModule(target, [], SHLIBPREFIX='',
+                                          SHLINKFLAGS='$LINKFLAGS -bundle',
+                                          FRAMEWORKSFLAGS='-flat_namespace -undefined suppress')
             else:
-                if SYSTEM == 'osx':
-                    return env.LoadableModule(target, [], SHLIBPREFIX='',
-                                                 SHLINKFLAGS='$LINKFLAGS -bundle',
-                                                 FRAMEWORKSFLAGS='-flat_namespace -undefined suppress')
-                else:
-                    return env.LoadableModule(target, [], SHLIBPREFIX='')
-            return targets
+                return env.LoadableModule(target, [], SHLIBPREFIX='')
 
-        env.AddMethod(BuildBoostPython)
+        env.AddMethod(BoostPythonExtension)
         env.Tool('python')
 
 def exists(env):

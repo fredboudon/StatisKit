@@ -20,10 +20,6 @@ package:
     
 build:
   number: 1
-  script:
-    - pip install sphinxcontrib-blockdiag
-    - pip install sphinx_rtd_theme
-    - pip install chios
 
 about:
   home: http://statiskit.readthedocs.io
@@ -34,7 +30,8 @@ requirements:
     - python
     - sphinx
     - cmake
+    - pillow
   run:
     - python
     - sphinx
-    - cmake
+    - pillow

@@ -62,24 +62,114 @@ if [[ "$ERROR" = "0" ]]; then
     fi
     if [[ "$CONFIGURE_ONLY" = "false" ]]; then
         if [[ "$STATISKIT_DEV" = "" ]]; then
-            conda env update statiskit/statiskit-dev
+            export STATISKIT_DEV=statiskit-dev
+        fi
+        conda env remove -y -n $STATISKIT_DEV >/dev/null 2>/dev/null 
+        GIT=`which git`
+        if [[ "$GIT" = "" ]]; then
+            conda install git -n $STATISKIT_DEV -y -m
             if [[ ! "$?" = "0" ]]; then
-                export ERROR=1
-            else
-                conda activate statiskit-dev
+                export ERROR="1"
             fi
+            source activate $STATISKIT_DEV
+        fi
+        if [[ -d StatisKit ]]; then
+            export CLEAN_STATISKIT=false
         else
-            conda env update statiskit/statiskit-dev -n $STATISKIT_DEV
+            export CLEAN_STATISKIT=true
+            git clone https://github.com/StatisKit/StatisKit.git
             if [[ ! "$?" = "0" ]]; then
+                echo "Clone of the StatisKit repository failed." 
+                export ERROR=1
+            fi
+        fi
+        if [[ "$ERROR" = "0" ]]; then
+            cd StatisKit
+            conda build conda/python-scons -c statiskit -c conda-forge
+            if [[ ! "$?" = "0" ]]; then
+                echo "Build of the python-scons Conda recipe failed."
+                cd ..
                 export ERROR=1
             else
-                source activate $STATISKIT_DEV
+                conda install -n $STATISKIT_DEV python-scons --use-local -c statiskit -c conda-forge -y -m
+                if [[ ! "$?" = "0" ]]; then
+                    echo "Creation of the StatisKit development environment failed."
+                    cd ..
+                    export ERROR=1
+                else
+                    source activate $STATISKIT_DEV
+                    if [[ ! "$?" = "0" ]]; then
+                        echo "Activation of the StatisKit development environment failed."
+                        cd ..
+                        export ERROR=1
+                    else
+                        scons conda-install
+                        if [[ ! "$?" = "0" ]]; then
+                            echo "Installation of the StatisKit development environment failed."
+                            export ERROR=1
+                        fi
+                        cd ..
+                    fi
+                fi
+            fi
+        fi
+        if [[ "$ERROR" = "0" ]]; then
+            if [[ -d PyClangLite ]]; then
+                export CLEAN_PYCLANGLITE=false
+            else
+                export CLEAN_PYCLANGLITE=true
+                git clone https://github.com/StatisKit/PyClangLite.git
+                if [[ ! "$?" = "0" ]]; then
+                    echo "Clone of the PyClangLite repository failed." 
+                    export ERROR=1
+                fi
+            fi
+            if [[ "$ERROR" = "0" ]]; then
+                cd PyClangLite
+                scons conda-install
+                if [[ ! "$?" = "0" ]]; then
+                    echo "Installation of PyClangLite in the development environment failed."
+                    export ERROR=1
+                fi
+                cd ..
+            fi
+        fi
+        if [[ "$ERROR" = "0" ]]; then
+            if [[ -d AutoWIG ]]; then
+                export CLEAN_AUTOWIG=false
+            else
+                export CLEAN_AUTOWIG=true
+                git clone https://github.com/StatisKit/AutoWIG.git
+                if [[ ! "$?" = "0" ]]; then
+                    echo "Clone of the AutoWIG repository failed." 
+                    export ERROR=1
+                fi
+            fi
+            if [[ "$ERROR" = "0" ]]; then
+                cd AutoWIG
+                scons conda-install
+                if [[ ! "$?" = "0" ]]; then
+                    echo "Installation of AutoWIG in the development environment failed."
+                    export ERROR=1
+                fi
+                cd ..
             fi
         fi
     fi
 fi
 
+if [[ -d StatisKit && "$CLEAN_STATISKIT" = "true" ]]; then
+    rm -rf StatisKit
+fi
+if [[ -d AutoWIG && "$CLEAN_AUTOWIG" = "true" ]]; then
+    rm -rf AutoWIG
+fi
+if [[ -d PyClangLite && "$ClEAN_PYCLANGLITE" = "true" ]]; then
+    rm -rf AutoWIG
+fi
+    
 if [[ "$ERROR" = "0" ]]; then
+    conda build purge
     if [[ ! "$CONFIGURE_ONLY" = "false" ]]; then
         echo "Developer configuration succeded."
     else
