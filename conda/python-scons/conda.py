@@ -46,22 +46,9 @@ def generate(env):
             os.unlink(os.path.join(recipe, 'meta.yaml.rendered'))
         return conda, packages
 
-    # def order_recipes(mode, recipes):
-    #     graph = networkx.DiGraph()
-    #     for recipe in recipes:
-    #         graph.add_node(str(recipe.name), path=recipe.abspath())
-    #     for recipe in recipes:
-    #         with open(recipe/'meta.yaml', 'w') as filehandler:
-    #             rendered = ''.join(filehandler.readlines()).replace('{{ ', '$').replace(' }}', '')
-    #             requirements = yaml.load(rendered).get('requirements', {}).get(mode, {})
-    #         for requirement in requirements:
-    #             requirement = requirement.split()[0]
-    #             if requirement in graph:
-    #                 graph.add_edge(requirement, str(recipe.name))
-    #     return [graph.node[recipe]['path'] for recipe in networkx.topological_sort(graph)]
-
     def CondaPackages(env, sources):
         CONDA_CHANNELS =  env['CONDA_CHANNELS']
+        CONDA_WITH_TEST = env['CONDA_WITH_TEST']
         targets = []
         conda, packages = list_packages(env, sources)
         CONDA_ENVIRONMENT = path(conda).parent.parent
